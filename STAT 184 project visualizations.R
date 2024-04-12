@@ -38,3 +38,19 @@ ggplot(selected_data_summary, aes(x = factor(`Speed Limit`), y = n, fill = `Inju
   theme_minimal() +
   scale_fill_brewer(palette = "Spectral") +  # Using a color palette that is distinct
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # To prevent overlapping of x labels
+
+
+
+crash_frequency_by_speed_severity <- crash_data %>%
+  group_by(`Speed Limit`, `Injury Severity`) %>%
+  summarise(CrashFrequency = n(), .groups = 'drop')
+
+# Scatter plot with different colors for different severity levels
+ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFrequency)) +
+  geom_point(aes(color = `Injury Severity`)) +  # Color points by severity
+  geom_smooth(method = "lm", se = FALSE, aes(color = `Injury Severity`, group = `Injury Severity`)) +  # Add colored regression lines
+  labs(title = "Scatter Plot of Crash Frequency by Speed Limit and Injury Severity",
+       x = "Speed Limit (mph)",
+       y = "Crash Frequency") +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set1")  # Use a color brewer palette for distinct colors
