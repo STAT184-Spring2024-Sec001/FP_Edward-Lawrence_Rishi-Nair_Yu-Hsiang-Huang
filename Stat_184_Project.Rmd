@@ -1,30 +1,52 @@
 ---
-title: "STAT 184 Project"
+title: "Exploring Car Crashes in Relation to Different Ways of Distraction"
 author: "Yu-Hsiang Huang, Edward Lawrence, Rishi Nair"
-date: "`r Sys.Date()`"
-output: html_document
+date: "4/17/2024"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Introduction
+
+# Data Exploration & Visualizations
+
+First, to explore the necessary data, we need to extract the features 'Light' and 'Distracted By' and remove the drivers that are not distracted.
+
+```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
+library(readr)  # for read_csv
+library(dplyr)  # for data manipulation
+library(ggplot2)
+# Reading the data from the CSV file
+file_path <- "C:/Users/Ivan9/Downloads/Crash_Reporting_-_Drivers_Data.csv"
+crash_data <- read_csv(file_path)
+
+# Extracting 'Light' and 'Distracted By' columns
+selected_data <- crash_data %>%
+  select(`Light`, `Driver Distracted By`)  # Replace `Distracted By` with the exact column name if different
+
+distraction_filtered <- selected_data %>%
+  filter(`Driver Distracted By` != "NOT DISTRACTED") %>%
+  group_by(`Light`,`Driver Distracted By`) %>%
+  summarise(Count = n(), .groups = 'drop')
+# Display the first few rows of the extracted data
+
+distraction_filtered %>%
+  show()  # Show only the first few rows
+
 ```
 
-## R Markdown
+```{r stacked-bar-chart, echo=TRUE, message=FALSE, warning=FALSE}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Create the stacked bar chart
+ggplot(distraction_filtered, aes(x = Light, y = Count, fill = `Driver Distracted By`)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distraction Frequency by Light Conditions",
+       x = "Light Conditions",
+       y = "Count of Distraction Type") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1") # To give distinct colors to different distraction types
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
