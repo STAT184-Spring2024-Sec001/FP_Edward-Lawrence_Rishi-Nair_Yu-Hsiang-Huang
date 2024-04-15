@@ -9,18 +9,23 @@ output:
     code_folding: hide
 ---
 
-# Introduction
-
-# Data Exploration & Visualizations
-
-## Extracting the Data
-
-First, to explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'.
-
-```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
+```{setup, include=FALSE}
 library(readr)  # for read_csv
 library(dplyr)  # for data manipulation
 library(ggplot2)
+```
+
+# Introduction
+
+The research question we decided on is whether the severity of a person's injury in a crash is proportional to how big or small the speed limit in an area is. The hypothesis we will be testing is that the larger a speed limit is, the more severe the injury will be, while smaller speed limits will result in little to no injury.
+
+The data set we are using comes from Montgomery County of Maryland, collected via the Automated Crash Reporting System (ACRS) of the Maryland State police. It lists each collision data that has been recorded along with drivers that are involved. This data has been collected from 2015 to 2024, and compiled in a CSV which will be analyzed through created visualizations.
+
+## Extracting the Data
+
+First, to explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'. This data will be used in visualizations and analysis to find out if there is a major correlation in the speed limits and how severe and injury in a car crash will be. The variable 'Injury Severity' will be out independent varible, while 'Speed Limit' will act as our dependent variable.
+
+```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
 # Reading the data from the CSV file
 file_path <- "C:/Users/lawre/Documents/GitHub/FP_Edward-Lawrence_Rishi-Nair_Yu-Hsiang-Huang/Maryland_Crash_Reporting_-_Drivers_Data.csv"
 crash_data <- read_csv(file_path)
@@ -29,9 +34,11 @@ crash_data <- read_csv(file_path)
 selected_data <- crash_data %>%
   select(`Speed Limit`, `Injury Severity`)  
 ```
+
 ## Histogram
- Next we will use the function ggplot2 to make a histogram showing injuries over different speed limits.
- 
+
+Next, we will take each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplots2 library in R.
+
 ```{r limit-injury-histogram, echo=TRUE, message=FALSE, warning=FALSE}
 # Creating a histogram of crashes by speed limit
 ggplot(selected_data, aes(x = `Speed Limit`)) +  
@@ -41,7 +48,12 @@ ggplot(selected_data, aes(x = `Speed Limit`)) +
        y = "Number of Crashes") +
   theme_minimal()
 ```
+With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland.
+
 ## Bar Chart
+
+Next, we will create a bar chart to 
+
 ```{r limit-injury-bar-chart, echo=TRUE, message=FALSE, warning=FALSE}
 # First, we count the number of occurrences of each injury severity for each speed limit
 selected_data_summary <- crash_data %>%
@@ -58,12 +70,13 @@ ggplot(selected_data_summary, aes(x = factor(`Speed Limit`), y = n, fill = `Inju
   scale_fill_brewer(palette = "Spectral") +  # Using a color palette that is distinct
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # To prevent overlapping of x labels
 
-
 crash_frequency_by_speed_severity <- crash_data %>%
   group_by(`Speed Limit`, `Injury Severity`) %>%
   summarise(CrashFrequency = n(), .groups = 'drop')
 ```
+
 ## Scatter Plot
+
 ```{r limit-injury-scatter-plot, echo=TRUE, message=FALSE, warning=FALSE}
 # Scatter plot with different colors for different severity levels
 ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFrequency)) +
@@ -75,3 +88,5 @@ ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFreque
   theme_minimal() +
   scale_color_brewer(palette = "Set1")  # Use a color brewer palette for distinct colors
 ```
+
+# Results and Conclusions
