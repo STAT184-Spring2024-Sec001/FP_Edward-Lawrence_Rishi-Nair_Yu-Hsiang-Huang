@@ -37,7 +37,7 @@ selected_data <- crash_data %>%
 
 ## Histogram
 
-Next, we will take each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplots2 library in R.
+Next, we will take each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplot2 library in R.
 
 ```{r limit-injury-histogram, echo=TRUE, message=FALSE, warning=FALSE}
 # Creating a histogram of crashes by speed limit
@@ -48,11 +48,11 @@ ggplot(selected_data, aes(x = `Speed Limit`)) +
        y = "Number of Crashes") +
   theme_minimal()
 ```
-With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland.
+With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland. 
 
 ## Bar Chart
 
-Next, we will create a bar chart to 
+Next, we want to see the relationship of the severity of injuries in regards to the speed limit and frequency of when crashes ended up taking place. We will do this using a stacked bar chart, where injury severity is the stacked variable. We will create this model by once again using the ggplot2 library, as well as data verbs such as mutate to create the stacked component.
 
 ```{r limit-injury-bar-chart, echo=TRUE, message=FALSE, warning=FALSE}
 # First, we count the number of occurrences of each injury severity for each speed limit
@@ -74,6 +74,7 @@ crash_frequency_by_speed_severity <- crash_data %>%
   group_by(`Speed Limit`, `Injury Severity`) %>%
   summarise(CrashFrequency = n(), .groups = 'drop')
 ```
+As we can see from the model, the vast majority of crash cases in Montgomery County do not result in any apparent injury, but as the frequency of crashes get higher as we move to the 30-40 mph speed limit range, we do see cases of injuries, from minor injuries to potetially major injuries. As we read our data table, we did see very few cases of fatal injuries as well, but since the frequency of that data was so insignificant, it did not end up showing up on the visualization.
 
 ## Scatter Plot
 
