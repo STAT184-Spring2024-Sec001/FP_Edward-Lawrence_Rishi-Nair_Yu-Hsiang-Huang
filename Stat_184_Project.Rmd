@@ -1,5 +1,5 @@
 ---
-title: "Speed Limits and How They Affect the Severity of Injuries in Car Crashes"
+title: "Speed Limits and the Severity of Injuries in Car Crashes"
 author: "Yu-Hsiang Huang, Edward Lawrence, Rishi Nair"
 date: "4/17/2024"
 output: 
@@ -23,7 +23,7 @@ The data set we are using comes from Montgomery County of Maryland, collected vi
 
 ## Extracting the Data
 
-First, to explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'. This data will be used in visualizations and analysis to find out if there is a major correlation in the speed limits and how severe and injury in a car crash will be. The variable 'Injury Severity' will be out independent varible, while 'Speed Limit' will act as our dependent variable.
+First, to explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'. This data will be used in visualizations and analysis to find out if there is a major correlation in the speed limits and how severe and injury in a car crash will be. The variable 'Injury Severity' will be out independent variable, while 'Speed Limit' will act as our dependent variable.
 
 ```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
 # Reading the data from the CSV file
@@ -48,7 +48,8 @@ ggplot(selected_data, aes(x = `Speed Limit`)) +
        y = "Number of Crashes") +
   theme_minimal()
 ```
-With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland. 
+
+With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland.
 
 ## Bar Chart
 
@@ -74,11 +75,12 @@ crash_frequency_by_speed_severity <- crash_data %>%
   group_by(`Speed Limit`, `Injury Severity`) %>%
   summarise(CrashFrequency = n(), .groups = 'drop')
 ```
+
 As we can see from the model, the vast majority of crash cases in Montgomery County do not result in any apparent injury, but as the frequency of crashes get higher as we move to the 30-40 mph speed limit range, we do see cases of injuries, from minor injuries to potetially major injuries. As we read our data table, we did see very few cases of fatal injuries as well, but since the frequency of that data was so insignificant, it did not end up showing up on the visualization.
 
 ## Scatter Plot
 
-Finally, to effectively illustrate the variety of injuries that occurred at given speed limits in Maryland, we created a scatter plot with our data set. This plot was created using the ggplots2 library, using the geom_point, geom_smooth, and labs functions to display which of the variables we are testing from the data set. Each of the different points were colored accordingly, to effectively differentiate themselves from one another. 
+Finally, to effectively illustrate the variety of injuries that occurred at given speed limits in Maryland, we created a scatter plot with our data set. This plot was created using the ggplots2 library, using the geom_point, geom_smooth, and labs functions to display which of the variables we are testing from the data set. Each of the different points were colored accordingly, to effectively differentiate themselves from one another.
 
 ```{r limit-injury-scatter-plot, echo=TRUE, message=FALSE, warning=FALSE}
 # Scatter plot with different colors for different severity levels
@@ -92,8 +94,10 @@ ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFreque
   scale_color_brewer(palette = "Set1")  # Use a color brewer palette for distinct colors
 ```
 
-The result of this data visualization was that all other injury types besides “No Apparent Injury” type variable showed a steady rise in appearance as the speed limit increased. The most frequently shown type of injury was there being no apparent injury, showing itself to be around the 30 to 35 mph speed limit. This data further supports our hypothesis that the severity of injury increases as the speed limit increases, even if the total amount that does increase is so small.
-# Results and Conclusions
+# Results
 
-From the three visualizations we created through the Maryland crash data see, we can use our evaluation through those illustrations to answer our original question of whether a person’s injury changes depending on the given speed limit. From the first histogram we created, we got an idea of how most crashes occur at the average speed limit found in Maryland, being around 30 to 40 mph. This let us know where to expect most of the injuries in the data set. Next, our stacked bar chart illustrated how at that average we found, there were mostly no apparent injuries reported. This demonstrates how injuries do not occur in most crash instances even despite the change in speed limits. Finally, the scatter plot that was created definitively explains how the change in speed limits on the road does not affect the severity of a person’s injury. 
+The result of this data visualization was that all other injury types besides "No Apparent Injury" type variable showed a steady rise in appearance as the speed limit increased. The most frequently shown type of injury was there being no apparent injury, showing itself to be around the 30 to 35 mph speed limit. This data further supports our hypothesis that the severity of injury increases as the speed limit increases, even if the total amount that does increase is so small. \# Results and Conclusions
 
+# Conclusion
+
+From the three visualizations we created through the Maryland crash data see, we can use our evaluation through those illustrations to answer our original question of whether a person's injury changes depending on the given speed limit. From the first histogram we created, we got an idea of how most crashes occur at the average speed limit found in Maryland, being around 30 to 40 mph. This let us know where to expect most of the injuries in the data set. Next, our stacked bar chart illustrated how at that average we found, there were mostly no apparent injuries reported. This demonstrates how injuries do not occur in most crash instances even despite the change in speed limits. Finally, the scatter plot that was created definitively explains how the change in speed limits on the road does not affect the severity of a person's injury.
