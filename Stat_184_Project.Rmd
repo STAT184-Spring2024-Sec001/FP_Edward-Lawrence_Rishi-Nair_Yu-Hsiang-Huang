@@ -1,7 +1,7 @@
 ---
 title: "Speed Limits and How They Affect the Severity of Injuries in Car Crashes"
 author: "Yu-Hsiang Huang, Edward Lawrence, Rishi Nair"
-date: "4/17/2024"
+date: "`r format(Sys.time(), '%d/%m/%y')`"
 output: 
   html_document:
     toc: true
@@ -9,21 +9,30 @@ output:
     code_folding: hide
 ---
 
+```{r setup}
+library(ggplot2)
+library(readr)
+library(dplyr)
+```
+
 # Introduction
+
+Driving is one of the most constant and necessary parts of an American's day, and unfortunately, many accidents and crashes occur every day due to the amount of people on the road. One of the most common types of accidents to occur for drivers was speeding as found by the highways.dot.gov site showing that: "Drivers who exceed the posted speed limit are involved in nearly one-third of all fatal crashes." From this, we felt it was important to look into how speed limits would affect the severity of crashes that people experience after an accident.
 
 The research question we decided on is whether the severity of a person's injury in a crash is proportional to how big or small the speed limit in an area is. The hypothesis we will be testing is that the larger a speed limit is, the more severe the injury will be, while smaller speed limits will result in little to no injury.
 
-The data set we are using comes from Montgomery County of Maryland, collected via the Automated Crash Reporting System (ACRS) of the Maryland State police. It lists each collision data that has been recorded along with drivers that are involved. This data has been collected from 2015 to 2024, and compiled in a CSV which will be analyzed through created visualizations.
+## Origin of Our Data
+
+The data set we are using comes from Montgomery County of Maryland, collected via the Automated Crash Reporting System (ACRS) of the Maryland State police. This data was collected in a CSV file, hosted on the catalog.data.gov site, found as the title: "Crash Reporting - Drivers Data."
+
+The data set was already shown to be tidy and well organized, allowing us to easily read and understand what was being presented in the file. The set contains a collection data from 2015 to 2024, with many columns containing vasts amount of factors that could be listed for a given crash. This data could include the id of the incident, the location of the crash, the status of the driver before the accident, and weather conditions at the time of the crash.
 
 ## Extracting the Data
 
-First, to explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'. This data will be used in visualizations and analysis to find out if there is a major correlation in the speed limits and how severe and injury in a car crash will be. The variable 'Injury Severity' will be out independent variable, while 'Speed Limit' will act as our dependent variable.
+To explore the necessary data, we need to extract the features 'Injury Severity' and 'Speed Limit'. This data will be used in visualizations and analysis to find out if there is a major correlation in the speed limits and how severe and injury in a car crash will be. The variable 'Injury Severity' will be out independent variable, while 'Speed Limit' will act as our dependent variable.
 
 ```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
 # Reading the data from the CSV file
-library(readr)
-library(dplyr)
-
 crash_data <- read.csv("https://drive.google.com/uc?export=download&id=1v748QiHtEVjUoB67n4worBFm5O3YNm3J")
 
 #Extracting 'Injury Severity' and 'Speed Limit' columns
@@ -31,12 +40,13 @@ selected_data <- crash_data %>%
   select(`Speed.Limit`, `Injury.Severity`)
 ```
 
+# Visualizations
+
 ## Histogram
 
 Next, we will be taking each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplot2 library in R.
 
 ```{r limit-injury-histogram, echo=TRUE, message=FALSE, warning=FALSE}
-library(ggplot2)
 # Creating a histogram of crashes by speed limit
 ggplot(selected_data, aes(x = `Speed.Limit`)) +  
   geom_histogram(bins = 20, fill = "lightblue", color = "black") +
@@ -55,10 +65,7 @@ With this histogram, we can see how the most amount of crashes mostly occur when
 Next, we want to see the relationship of the severity of injuries in regards to the speed limit and frequency of when crashes ended up taking place. We will do this using a stacked bar chart, where injury severity is the stacked variable. We will create this model by once again using the ggplot2 library, as well as data verbs such as mutate to create the stacked component.
 
 ```{r limit-injury-bar-chart, echo=TRUE, message=FALSE, warning=FALSE}
-library(readr)
-library(dplyr)
-
-# First, define your color palette
+# First, define the color palette
 color_palette <- c("NO APPARENT INJURY" = "forestgreen", 
                    "POSSIBLE INJURY" = "blue", 
                    "SUSPECTED MINOR INJURY" = "yellow", 
@@ -94,7 +101,6 @@ As we can see from the model, the vast majority of crash cases in Montgomery Cou
 Finally, to effectively illustrate the variety of injuries that occurred at given speed limits in Maryland, we created a scatter plot with our data set. This plot was created using the ggplots2 library, using the geom_point, geom_smooth, and labs functions to display which of the variables we are testing from the data set. Each of the different points were colored accordingly, to effectively differentiate themselves from one another.
 
 ```{r limit-injury-scatter-plot, echo=TRUE, message=FALSE, warning=FALSE}
-# Define a custom color palette
 # Define the order of severity levels as a factor
 severity_levels <- factor(c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY"),
                           levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY"))
@@ -125,14 +131,16 @@ ggplot(crash_frequency_by_speed_severity, aes(x = `Speed.Limit`, y = CrashFreque
 
 The result of this data visualization was that all other injury types besides "No Apparent Injury" type variable showed a steady rise in appearance as the speed limit increased. The most frequently shown type of injury was there being no apparent injury, showing itself to be around the 30 to 35 mph speed limit. This data further supports our hypothesis that the severity of injury increases as the speed limit increases, even if the total amount that does increase is so small.
 
+# Final Thoughts
+
 ## Results
 
 From the three visualizations we created through the Maryland crash data, we can see that "No Apparent Injury" showed a rise in appearance over the different speed limits. We also found that most injury types stayed around the middle speed limit, which was 30 to 40 mph. Specifically with the bar chart, it was shown to be somewhat symmetrical, meaning that there was not a lot of evidence to show that injuries increased as speed limits went past 40 mph. Along with this, for the scatter plot, the correlation line showed minor correlation between speed limits, injury frequency and injury severity.
 
 With these results, unfortunately, our hypothesis could not be supported. As even with the uptick in the severity of injuries over the increasing speed limits, the appearance of those injury severities was too small to be seen.
 
-## Conclusions
+## Conclusion
 
-From the results gathered by the visualizations we created, we can interpret that higher speed limits only lead to more severe injuries until they hit 40 mph. After they get to 40 mph, the crash frequency decreases exponentially as it goes further beyond 40 mph. We can also interpret that crashes occur mostly in the 30-40 mph speed limit zones, due to the prevalence of those zones. 
+From the results gathered by the visualizations we created, we can interpret that higher speed limits only lead to more severe injuries until they hit 40 mph. After they get to 40 mph, the crash frequency decreases exponentially as it goes further beyond 40 mph. We can also interpret that crashes occur mostly in the 30-40 mph speed limit zones, due to the prevalence of those zones.
 
 Finally, from how many crashes occur in speed limits below and around 25 mph, it can be inferred that most accidents occur at those limits due to them being around pedestrians and neighborhoods. Along with this, accidents are shown to be less severe at those speeds due to the locations in small neighborhoods and there being little necessity ease to speed through them.
