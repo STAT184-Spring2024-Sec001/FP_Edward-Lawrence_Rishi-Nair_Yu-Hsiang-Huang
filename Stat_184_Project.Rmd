@@ -39,7 +39,6 @@ Next, we will be taking each given speed limit and see if the larger numbers cor
 library(ggplot2)
 # Creating a histogram of crashes by speed limit
 ggplot(selected_data, aes(x = `Speed.Limit`)) +  
-ggplot(selected_data, aes(x = `Speed Limit`)) +  
   geom_histogram(bins = 20, fill = "blue", color = "black") +
   labs(title = "Histogram of Crashes by Speed Limit",
        x = "Speed Limit (mph)",
@@ -60,11 +59,9 @@ Next, we want to see the relationship of the severity of injuries in regards to 
 selected_data_summary <- crash_data %>%
   count(`Speed.Limit`, `Injury.Severity`) %>%
   mutate(`Injury.Severity` = factor(`Injury.Severity`, levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY")))
-  count(`Speed Limit`, `Injury Severity`) %>%
-  mutate(`Injury Severity` = factor(`Injury Severity`, levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY")))
-
+  
 # Now we can create a stacked bar chart
-ggplot(selected_data_summary, aes(x = factor(`Speed Limit`), y = n, fill = `Injury Severity`)) +
+ggplot(selected_data_summary, aes(x = factor(`Speed.Limit`), y = n, fill = `Injury.Severity`)) +
   geom_bar(stat = "identity") +
   labs(title = "Stacked Bar Chart of Crashes by Speed Limit and Injury Severity",
        x = "Speed Limit (mph)",
@@ -74,7 +71,7 @@ ggplot(selected_data_summary, aes(x = factor(`Speed Limit`), y = n, fill = `Inju
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # To prevent overlapping of x labels
 
 crash_frequency_by_speed_severity <- crash_data %>%
-  group_by(`Speed Limit`, `Injury Severity`) %>%
+  group_by(`Speed.Limit`, `Injury.Severity`) %>%
   summarise(CrashFrequency = n(), .groups = 'drop')
 ```
 
@@ -91,9 +88,6 @@ Finally, to effectively illustrate the variety of injuries that occurred at give
 ggplot(crash_frequency_by_speed_severity, aes(x = `Speed.Limit`, y = CrashFrequency)) +
   geom_point(aes(color = `Injury.Severity`)) +  # Color points by severity
   geom_smooth(method = "lm", se = FALSE, aes(color = `Injury.Severity`, group = `Injury.Severity`)) +  # Add colored regression lines
-ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFrequency)) +
-  geom_point(aes(color = `Injury Severity`)) +  # Color points by severity
-  geom_smooth(method = "lm", se = FALSE, aes(color = `Injury Severity`, group = `Injury Severity`)) +  # Add colored regression lines
   labs(title = "Scatter Plot of Crash Frequency by Speed Limit and Injury Severity",
        x = "Speed Limit (mph)",
        y = "Crash Frequency") +
@@ -108,4 +102,4 @@ The result of this data visualization was that all other injury types besides "N
 
 ## Results and Conclusions
 
-From the three visualizations we created through the Maryland crash data see, we can use our evaluation through those illustrations to answer our original question of whether a person's injury changes depending on the given speed limit. From the first histogram we created, we got an idea of how most crashes occur at the average speed limit found in Maryland, being around 30 to 40 mph. This let us know where to expect most of the injuries in the data set. Next, our stacked bar chart illustrated how at that average we found, there were mostly no apparent injuries reported. This demonstrates how injuries do not occur in most crash instances even despite the change in speed limits. Finally, the scatter plot that was created definitively explains how the change in speed limits on the road does not affect the severity of a person's injury. From the three visualizations we created through the Maryland crash data see, we can use our evaluation through those illustrations to answer our original question of whether a person's injury changes depending on the given speed limit. From the first histogram we created, we got an idea of how most crashes occur at the average speed limit found in Maryland, being around 30 to 40 mph. This let us know where to expect most of the injuries in the data set. Next, our stacked bar chart illustrated how at that average we found, there were mostly no apparent injuries reported. This demonstrates how injuries do not occur in most crash instances even despite the change in speed limits. Finally, the scatter plot that was created definitively explains how the change in speed limits on the road does not affect the severity of a person's injury.
+From the three visualizations we created through the Maryland crash data see, we can use our evaluation through those illustrations to answer our original question of whether a person's injury changes depending on the given speed limit. From the first histogram we created, we got an idea of how most crashes occur at the average speed limit found in Maryland, being around 30 to 40 mph. This let us know where to expect most of the injuries in the data set. Next, our stacked bar chart illustrated how at that average we found, there were mostly no apparent injuries reported. This demonstrates how injuries do not occur in most crash instances even despite the change in speed limits. Finally, the scatter plot that was created definitively explains how the change in speed limits on the road does not affect the severity of a person's injury.
