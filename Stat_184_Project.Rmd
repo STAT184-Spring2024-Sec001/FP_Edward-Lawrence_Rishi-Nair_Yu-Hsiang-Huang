@@ -32,7 +32,7 @@ selected_data <- crash_data %>%
 
 ## Histogram
 
-Next, we will take each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplot2 library in R.
+Next, we will be taking each given speed limit and see if the larger numbers correlate to more crashes occurring. This will be illustrated through a histogram model, created from the ggplot2 library in R.
 
 ```{r limit-injury-histogram, echo=TRUE, message=FALSE, warning=FALSE}
 library(ggplot2)
