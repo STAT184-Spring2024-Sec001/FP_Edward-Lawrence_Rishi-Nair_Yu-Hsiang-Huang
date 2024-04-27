@@ -9,6 +9,7 @@ crash_data <- read_csv(file_path)
 # Displaying the structure of the dataset to confirm the names of the columns
 str(crash_data)
 
+summary(crash_data$Speed.Limit)
 # Extracting the 'Speed limit' and 'Injury Severity' columns
 selected_data <- crash_data %>%
   select(`Speed Limit`, `Injury Severity`)  # Ensure these column names match your CSV exactly

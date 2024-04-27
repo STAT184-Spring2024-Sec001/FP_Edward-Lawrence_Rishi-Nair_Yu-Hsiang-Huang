@@ -10,6 +10,7 @@ output:
 ---
 
 ```{r setup}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(ggplot2)
 library(readr)
 library(dplyr)
@@ -40,6 +41,45 @@ selected_data <- crash_data %>%
   select(`Speed.Limit`, `Injury.Severity`)
 ```
 
+# Summary Table
+
+```{r summary-statistics, message=FALSE, warning=FALSE}
+library(knitr)
+library(dplyr)
+library(tidyr)
+
+# Assuming you have a data frame 'crash_data' with a column 'Speed.Limit'
+# Calculate summary statistics
+
+speed_limit_summary <- selected_data %>%
+  summarise(
+    n = n(),
+    Min = min(Speed.Limit, na.rm = TRUE),
+    Q1 = quantile(Speed.Limit, 0.25, na.rm = TRUE),
+    Median = median(Speed.Limit, na.rm = TRUE),
+    Q3 = quantile(Speed.Limit, 0.75, na.rm = TRUE),
+    Max = max(Speed.Limit, na.rm = TRUE),
+    MAD = mad(Speed.Limit, na.rm = TRUE),
+    SAM = mean(Speed.Limit, na.rm = TRUE), # SAM is mean for the example
+    SASD = sd(Speed.Limit, na.rm = TRUE),  # SASD is std deviation for the example
+  ) %>%
+  # Pivot longer to have a key-value pair
+  pivot_longer(cols = everything(), names_to = "Statistic", values_to = "Value")
+
+
+# Assuming speed_limit_summary has been created as shown above
+
+# Create the table using kable()
+speed_limit_summary <- speed_limit_summary %>%
+  mutate(across(where(is.numeric), round, 2))
+
+speed_limit_summary_t <- t(speed_limit_summary)
+speed_limit_table <- kable(speed_limit_summary_t, format = "simple", caption = "Summary Statistics for Speed Limit")
+
+# Print the table to display in R Markdown
+speed_limit_table
+
+```
 # Visualizations
 
 ## Histogram
