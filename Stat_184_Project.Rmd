@@ -9,9 +9,9 @@ output:
     code_folding: hide
 ---
 
-```{setup, include=FALSE}
-library(readr)  # for read_csv
-library(dplyr)  # for data manipulation
+```{r setup, include=FALSE}
+library(readr)  
+library(dplyr)  
 library(ggplot2)
 ```
 
@@ -27,12 +27,11 @@ First, to explore the necessary data, we need to extract the features 'Injury Se
 
 ```{r extract-columns, echo=TRUE, message=FALSE, warning=FALSE}
 # Reading the data from the CSV file
-file_path <- "C:/Users/lawre/Documents/GitHub/FP_Edward-Lawrence_Rishi-Nair_Yu-Hsiang-Huang/Maryland_Crash_Reporting_-_Drivers_Data.csv"
-crash_data <- read_csv(file_path)
+crash_data <- read.csv("https://drive.google.com/uc?export=download&id=1v748QiHtEVjUoB67n4worBFm5O3YNm3J")
 
 #Extracting 'Injury Severity' and 'Speed Limit' columns
 selected_data <- crash_data %>%
-  select(`Speed Limit`, `Injury Severity`)  
+  select(`Speed.Limit`, `Injury.Severity`)  
 ```
 
 ## Histogram
@@ -41,57 +40,84 @@ Next, we will take each given speed limit and see if the larger numbers correlat
 
 ```{r limit-injury-histogram, echo=TRUE, message=FALSE, warning=FALSE}
 # Creating a histogram of crashes by speed limit
-ggplot(selected_data, aes(x = `Speed Limit`)) +  
-  geom_histogram(bins = 20, fill = "blue", color = "black") +
-  labs(title = "Histogram of Crashes by Speed Limit",
+ggplot(selected_data, aes(x = `Speed.Limit`)) +  
+  geom_histogram(bins = 20, fill = "lightblue", color = "black") +
+  labs(title = "Crashes by Speed Limit",
        x = "Speed Limit (mph)",
        y = "Number of Crashes") +
-  theme_minimal()
+  scale_x_continuous(breaks = seq(0,80, by = 5)) +
+  theme(plot.title = element_text(size = 16))
 ```
 
 With this histogram, we can see how the most amount of crashes mostly occur when the speed limit is around 30 to 40 mph. This given a better understanding of the data we are working with, showing that we should expect more crashes around the average of what the speed limit usually is in Maryland.
 
-## Bar Chart
+## Stacked Bar Chart
 
 Next, we want to see the relationship of the severity of injuries in regards to the speed limit and frequency of when crashes ended up taking place. We will do this using a stacked bar chart, where injury severity is the stacked variable. We will create this model by once again using the ggplot2 library, as well as data verbs such as mutate to create the stacked component.
 
 ```{r limit-injury-bar-chart, echo=TRUE, message=FALSE, warning=FALSE}
 # First, we count the number of occurrences of each injury severity for each speed limit
 selected_data_summary <- crash_data %>%
-  count(`Speed Limit`, `Injury Severity`) %>%
-  mutate(`Injury Severity` = factor(`Injury Severity`, levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY")))
+  count(`Speed.Limit`, `Injury.Severity`) %>%
+  mutate(`Injury.Severity` = factor(`Injury.Severity`, levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY")))
+
+#Assign different colors to each of the variables
+color_palette <- c("NO APPARENT INJURY" = "mediumseagreen", 
+                   "POSSIBLE INJURY" = "blue", 
+                   "SUSPECTED MINOR INJURY" = "yellow", 
+                   "SUSPECTED SERIOUS INJURY" = "orange", 
+                   "FATAL INJURY" = "red")
 
 # Now we can create a stacked bar chart
-ggplot(selected_data_summary, aes(x = factor(`Speed Limit`), y = n, fill = `Injury Severity`)) +
+ggplot(selected_data_summary, aes(x = factor(`Speed.Limit`), y = n, fill = `Injury.Severity`)) +
   geom_bar(stat = "identity") +
-  labs(title = "Stacked Bar Chart of Crashes by Speed Limit and Injury Severity",
+  labs(title = "Crashes and Injury Severity by Speed Limit",
        x = "Speed Limit (mph)",
        y = "Crash Frequency") +
   theme_minimal() +
-  scale_fill_brewer(palette = "Spectral") +  # Using a color palette that is distinct
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # To prevent overlapping of x labels
+  scale_fill_manual(values = color_palette) + #Manually place the chosen variable colors
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),  # To prevent overlapping of x labels
+        axis.title.y = element_text(vjust = 2))  # Adjust the distance of y-axis title
 
 crash_frequency_by_speed_severity <- crash_data %>%
-  group_by(`Speed Limit`, `Injury Severity`) %>%
+  group_by(`Speed.Limit`, `Injury.Severity`) %>%
   summarise(CrashFrequency = n(), .groups = 'drop')
 ```
 
-As we can see from the model, the vast majority of crash cases in Montgomery County do not result in any apparent injury, but as the frequency of crashes get higher as we move to the 30-40 mph speed limit range, we do see cases of injuries, from minor injuries to potetially major injuries. As we read our data table, we did see very few cases of fatal injuries as well, but since the frequency of that data was so insignificant, it did not end up showing up on the visualization.
+As we can see from the model, the vast majority of crash cases in Montgomery County do not result in any apparent injury, but as the frequency of crashes get higher as we move to the 30-40 mph speed limit range, we do see cases of injuries, from minor injuries to potentially major injuries. As we read our data table, we did see very few cases of fatal injuries as well, but since the frequency of that data was so insignificant, it did not end up showing up on the visualization.
 
 ## Scatter Plot
 
-Finally, to effectively illustrate the variety of injuries that occurred at given speed limits in Maryland, we created a scatter plot with our data set. This plot was created using the ggplots2 library, using the geom_point, geom_smooth, and labs functions to display which of the variables we are testing from the data set. Each of the different points were colored accordingly, to effectively differentiate themselves from one another.
+Finally, to effectively illustrate the variety of injuries that occurred at given speed limits in Maryland, we created a scatter plot with our data set. This plot was created using the ggplots2 library, using the geom_point, geom_smooth, and other labs functions to display each of the variables we are testing from the data set. Each of the different points were colored accordingly, to effectively differentiate themselves from one another.
 
 ```{r limit-injury-scatter-plot, echo=TRUE, message=FALSE, warning=FALSE}
+# Reorder the levels of the 'Injury Severity' variable
+crash_frequency_by_speed_severity$`Injury.Severity` <- factor(
+  crash_frequency_by_speed_severity$`Injury.Severity`,
+  levels = c("NO APPARENT INJURY", "POSSIBLE INJURY", "SUSPECTED MINOR INJURY", "SUSPECTED SERIOUS INJURY", "FATAL INJURY")
+)
+
 # Scatter plot with different colors for different severity levels
-ggplot(crash_frequency_by_speed_severity, aes(x = `Speed Limit`, y = CrashFrequency)) +
-  geom_point(aes(color = `Injury Severity`)) +  # Color points by severity
-  geom_smooth(method = "lm", se = FALSE, aes(color = `Injury Severity`, group = `Injury Severity`)) +  # Add colored regression lines
-  labs(title = "Scatter Plot of Crash Frequency by Speed Limit and Injury Severity",
+color_palette <- c("NO APPARENT INJURY" = "mediumseagreen", 
+                   "POSSIBLE INJURY" = "blue", 
+                   "SUSPECTED MINOR INJURY" = "yellow", 
+                   "SUSPECTED SERIOUS INJURY" = "orange", 
+                   "FATAL INJURY" = "red")
+
+ggplot(crash_frequency_by_speed_severity, aes(x = `Speed.Limit`, y = CrashFrequency)) +
+  geom_point(aes(color = `Injury.Severity`)) +  # Color points by severity
+  geom_smooth(method = "lm", se = FALSE, aes(color = `Injury.Severity`, group = `Injury.Severity`)) +  # Add colored regression lines
+  labs(title = "Crashes and Injury Severity by Speed Limit",
        x = "Speed Limit (mph)",
        y = "Crash Frequency") +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1")  # Use a color brewer palette for distinct colors
+  scale_x_continuous(breaks = seq(0, 80, by = 10)) +
+  scale_color_manual(values = color_palette) +
+  guides(color = guide_legend(title = "Injury Severity")) +
+  theme(legend.key.size = unit(0.8, "lines"),
+        legend.text = element_text(size = 8), 
+        axis.title.y = element_text(vjust = 3),
+        # Adjust resolution
+        line = element_line(size = 0.5))  # Adjust the size here to control the smoothness of lines
 ```
 
 # Results
