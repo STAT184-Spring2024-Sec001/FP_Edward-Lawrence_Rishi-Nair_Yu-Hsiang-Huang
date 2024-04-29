@@ -80,6 +80,10 @@ speed_limit_table <- kable(speed_limit_summary_t, format = "simple", caption = "
 speed_limit_table
 
 ```
+# Summary Table Analysis
+
+The above code creates a general summary table. From the data table, we created an overall reflection of the distribution of the speed limit across these various accidents. The minimum speed limit value is 0, which could indicate that a person's car was hit and the person who did it left the scene. The median speed limit of all crashes is roughly around 35 mph, and it falls into the Interquartile Range of 25-40. These roads could indicate back roads or state roads where most of these accidents occur, as there is usually more commotion on those roads with less room between cars. The maximum speed limit was 75, but there fewer cases of these accidents, likely indicating they were either acts of reckless driving, or a highway accident, which is rarer because cars are usually farther apart and fewer between. Vice versa, the lower speed limits likely indicate construction areas or school zones, so accidents are less likely as drivers tend to be more cautious. The distribution had a standard deviation of roughly 11, and a mean of roughly 32.55 mph on accidents. This table gives us tremendous insight into why crashes happened, if the speed limit truly played the main factor in causing the accident and more.
+
 # Visualizations
 
 ## Histogram
